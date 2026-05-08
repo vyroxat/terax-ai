@@ -32,9 +32,9 @@ async fn open_settings_window(app: tauri::AppHandle, tab: Option<String>) -> Res
         .title_bar_style(tauri::TitleBarStyle::Overlay)
         .hidden_title(true);
 
-    // On Linux we render our own titlebar + rounded shell, so drop the
+    // On Linux & Windows we render our own titlebar, so drop the
     // native chrome and make the window transparent.
-    #[cfg(target_os = "linux")]
+    #[cfg(not(target_os = "macos"))]
     let builder = builder.decorations(false).transparent(true);
 
     let window = builder.build().map_err(|e| e.to_string())?;
@@ -42,7 +42,8 @@ async fn open_settings_window(app: tauri::AppHandle, tab: Option<String>) -> Res
     // Some Linux compositors (notably GNOME/Mutter with CSD-by-default)
     // ignore the builder-time decorations flag and force-draw a header bar.
     // Re-asserting it after the window is realized makes mutter respect it.
-    #[cfg(target_os = "linux")]
+    // Windows also benefits from re-asserting (avoids flicker on launch).
+    #[cfg(not(target_os = "macos"))]
     {
         let _ = window.set_decorations(false);
     }
@@ -53,6 +54,15 @@ async fn open_settings_window(app: tauri::AppHandle, tab: Option<String>) -> Res
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .setup(|app| {
+            // On non-macOS, strip native window chrome — the frontend
+            // renders its own titlebar with WindowControls.
+            #[cfg(not(target_os = "macos"))]
+            if let Some(main) = app.get_webview_window("main") {
+                let _ = main.set_decorations(false);
+            }
+            Ok(())
+        })
         .plugin(tauri_plugin_process::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
         .plugin(tauri_plugin_window_state::Builder::new().build())
