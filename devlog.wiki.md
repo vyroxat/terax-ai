@@ -4,6 +4,27 @@
 
 ---
 
+## 2026-05-09
+
+### [01:20] Enable multi-platform release CI and fix authorship
+
+**Type:** ci
+**Files:**
+- `.github/workflows/release.yml` — added macOS (ARM64 + x86_64) and Windows to build matrix
+- `README.md` — added Downloads section, Windows platform badge, build notes
+- `devlog.wiki.md` — created change journal
+
+**Why:** Release workflow only built Linux on ubuntu-22.04. Needed Windows .exe/.msi/.nsis, macOS .dmg/.app.tar.gz, and Linux .deb/.AppImage/.rpm packages for full cross-platform distribution. Previous commits were authored under wrong identity.
+
+**What:**
+- Added `macos-latest` (aarch64 + x86_64 targets) and `windows-latest` to CI matrix
+- Pushed tag v0.5.9 to trigger workflow; dispatched manually since force-push didn't trigger
+- Amended previous commits to vyroxat <vyroxat@gmail.com>
+- Deleted manual v0.5.9-windows release (will be superseded by CI-generated release)
+- Release will be created as draft by tauri-action; .sig files require TAURI_SIGNING_PRIVATE_KEY secret
+
+**Notes:** Manual Windows build artifacts at src-tauri/target/release/ were uploaded as standalone v0.5.9-windows release then deleted. CI-generated release will have all platforms. User needs to add TAURI_SIGNING_PRIVATE_KEY and TAURI_SIGNING_PRIVATE_KEY_PASSWORD to repo secrets for signed packages.
+
 ## 2026-05-08
 
 ### [23:50] Fix Windows build with GNU toolchain
