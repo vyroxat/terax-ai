@@ -7,7 +7,7 @@
   <p>
     <img src="https://img.shields.io/badge/version-0.5.9-blue" alt="version" />
     <img src="https://img.shields.io/badge/license-Apache--2.0-green" alt="license" />
-    <img src="https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20Windows%20(soon)-lightgrey" alt="platform" />
+    <img src="https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20Windows-blue" alt="platform" />
 
   </p>
 </div>
@@ -62,6 +62,16 @@ Terax is a fast, lightweight AI terminal (ADE) built on Tauri 2 + Rust and React
 - API keys stored in the OS keychain 
 - No telemetry, no account required
 
+## Download
+
+Prebuilt binaries are available on the [Releases](https://github.com/vyroxat/terax-ai/releases) page.
+
+| Platform | Package |
+|----------|---------|
+| Windows  | `.exe` (standalone) · `.msi` · `.nsis` installer |
+| macOS    | Build from source (see below) |
+| Linux    | Build from source (see below) |
+
 ## Configure AI
 
 1. Open **Settings → AI**.
@@ -74,6 +84,9 @@ Terax is a fast, lightweight AI terminal (ADE) built on Tauri 2 + Rust and React
 - Rust (stable) — https://rustup.rs
 - Node 20+ and [pnpm](https://pnpm.io)
 - Platform-specific Tauri prerequisites — https://tauri.app/start/prerequisites/
+- **Windows:** Requires the MSVC or GNU toolchain. For GNU (MinGW-w64),
+  ensure the MinGW `bin` directory is before any other MinGW/MSYS paths in
+  `PATH` to avoid DLL conflicts with cc1.exe.
 
 **Run**
 ```bash
